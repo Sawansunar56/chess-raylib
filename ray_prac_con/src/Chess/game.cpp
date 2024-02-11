@@ -3,6 +3,7 @@
 #include "game.h"
 #include "raylib.h"
 #include "Layer.h"
+#include "Events/Events.h"
 
 #include "components/button_component.h"
 
@@ -30,7 +31,7 @@ void Run() {
 
     Texture2D texture = LoadTexture("assets/textures/checkerboard.png");
 
-    Vector2 position = { 0.0f, 0.0f };
+    Vector2 position = {0.0f, 0.0f};
 
     Button *red = new Button("Trash", RED, 100, 100, 0.3f);
     red->SetEventCallback(helloFromTrash);
@@ -39,7 +40,6 @@ void Run() {
 
     subject.addLayer(red);
     subject.addLayer(yellow);
-
 
     while (!WindowShouldClose()) {
         BeginDrawing();
