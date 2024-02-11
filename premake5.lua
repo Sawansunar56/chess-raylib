@@ -31,6 +31,7 @@ project "ray_prac_con"
 
     includedirs {
         "%{prj.name}/src",
+        "%{prj.name}/src/Chess",
         "%{IncludeDirs.raylib}",
     }
     libdirs {

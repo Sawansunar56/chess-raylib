@@ -1,1 +1,2 @@
 -I./ray_prac_con/vendor/raylib-5.0/include/
+-I./ray_prac_con/src/Chess/

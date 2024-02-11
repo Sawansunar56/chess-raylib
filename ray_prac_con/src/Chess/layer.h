@@ -4,24 +4,22 @@
 #include <string>
 #include "events.h"
 
-class EventListener  {
-    public:
-        virtual void OnEvent(Event& event) = 0;
-};
 
-class Layer : public EventListener {
+// Event Listener / observer of events/
+class Layer {
     public:
         Layer(const std::string& name);
         virtual ~Layer() {}
 
         virtual void Render();
-        virtual void OnEvent(Event& event) override;
+        virtual void OnEvent(Event& event);
 
         inline const std::string &GetName() const { return debugName; }
     private:
         std::string debugName;
 };
 
+// Event handler  
 class LayerManager {
     public:
         LayerManager() = default;

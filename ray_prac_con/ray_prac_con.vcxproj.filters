@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Chess">
+      <UniqueIdentifier>{3B2EF60C-A742-1EBE-70C4-C11DDC971AEF}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Chess\components">
+      <UniqueIdentifier>{90FC9228-7CF5-B17A-A527-97FF917F9186}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Chess\components\button_component.h">
+      <Filter>Chess\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chess\events.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chess\game.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Chess\layer.h">
+      <Filter>Chess</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Chess\components\button_component.cpp">
+      <Filter>Chess\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chess\game.cpp">
+      <Filter>Chess</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Chess\layer.cpp">
+      <Filter>Chess</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
+</Project>
