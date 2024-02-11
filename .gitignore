@@ -1,0 +1,8 @@
+bin/
+bin-int/
+
+# visual studio files
+.vs
+*.sln
+*.vcxproj
+*.user
