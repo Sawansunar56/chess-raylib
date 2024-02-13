@@ -27,6 +27,7 @@
     <ClInclude Include="src\Chess\game.h">
       <Filter>Chess</Filter>
     </ClInclude>
+    <ClInclude Include="src\Chess\piece.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Chess\components\button_component.cpp">
@@ -39,5 +40,6 @@
       <Filter>Chess</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Chess\piece.cpp" />
   </ItemGroup>
 </Project>
