@@ -56,6 +56,7 @@ enum boardPiece
     BLACK_PAWN_SIX,
     BLACK_PAWN_SEVEN,
     BLACK_PAWN_EIGHT,
+    BOARD_PIECE_NUM
 };
 
 class Piece

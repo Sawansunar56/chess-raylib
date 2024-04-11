@@ -3,6 +3,7 @@
 #include "layer.h"
 #include "piece.h"
 #include "raylib.h"
+#include "play_piece.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -93,12 +94,62 @@ void Run()
                               PIECE_HEIGHT * scale};
 
     std::vector<Piece *> renderPieces;
-    std::vector<int> playingPieces;
+    std::vector<PlayPiece *> playingPieces;
 
-    for (int i = 0; i < P_NUM; ++i)
+    /*for (int i = 0; i < P_NUM; ++i)*/
+    /*{*/
+    /*    renderPieces.push_back(*/
+    /*        new Piece(pieceAtlus, pieceCoords[i], scaledCoord));*/
+    /*}*/
+
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KNIGHT], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_BISHOP], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_QUEEN], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KING], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_BISHOP], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KNIGHT], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK], scaledCoord));
+
+    for (int i = 0; i < 8; i++)
     {
         renderPieces.push_back(
-            new Piece(pieceAtlus, pieceCoords[i], scaledCoord));
+            new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_PAWN], scaledCoord));
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        renderPieces.push_back(
+            new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_PAWN], scaledCoord));
+    }
+
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KNIGHT], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_BISHOP], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_QUEEN], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KING], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_BISHOP], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KNIGHT], scaledCoord));
+    renderPieces.push_back(
+        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK], scaledCoord));
+
+    for (int i = 0; i < BOARD_PIECE_NUM; i++)
+    {
+        playingPieces.push_back(new PlayPiece(i));
     }
 
     // adding element into the screen
@@ -129,27 +180,21 @@ void Run()
         // TODO: Scale seems to be working fine but placement seems to be
         // doing the most problem. When a window resize occurs, it causes
         // the pieces to move either a little bit left or right.
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                renderPieces[WHITE_PIECE_ROOK]->render(x + (pieceGap * i * pieceScale),
-                                 y + (pieceGap * j * pieceScale),
-                                 PIECE_WIDTH * pieceScale,
-                                 PIECE_HEIGHT * pieceScale);
-            }
-        }
-        renderPieces[BLACK_PIECE_QUEEN]->render(x + (pieceGap * 1 * pieceScale),
-                         y + (pieceGap * 0 * pieceScale),
-                         PIECE_WIDTH * pieceScale, PIECE_HEIGHT * pieceScale);
 
         for (int i = 0; i < board.size(); i += 8)
         {
             for (int j = i; j < i + 8; ++j)
             {
-                std::cout << board[j] << " ";
+                int yStep = j / 8;
+                int xStep = j % 8;
+                if (board[j] != -1)
+                {
+                    renderPieces[board[j]]->render(
+                        x + (pieceGap * xStep * pieceScale),
+                        y + (pieceGap * yStep * pieceScale),
+                        PIECE_WIDTH * pieceScale, PIECE_HEIGHT * pieceScale);
+                }
             }
-            std::cout << "\n";
         }
 
         if (IsKeyPressed(KEY_A) || IsKeyPressedRepeat(KEY_A))
