@@ -97,6 +97,21 @@ void initBoardPieces(std::vector<Piece *> &renderPieces, Texture2D pieceAtlus,
                                      scaledCoord, moveElements));
 }
 
+struct ActiveRectangle
+{
+    Rectangle rect;
+    Color color;
+    WorldPosition moveElements;
+    void render(int x, int y)
+    {
+        rect.x = moveElements.positionX +
+                 (moveElements.pieceGap * x * moveElements.pieceScale);
+        rect.y = moveElements.positionY +
+                 (moveElements.pieceGap * y * moveElements.pieceScale);
+        DrawRectangleRounded(rect, 0.1f, 10, color);
+    }
+};
+
 void Run()
 {
     // constants
@@ -136,7 +151,9 @@ void Run()
 
     Vector2 position = {0.0f, 0.0f};
 
-    Button *red = new Button("Trash", RED, 100, 100, 0.3f);
+    Color activeColor{0, 0, 255, 50};
+
+    Button *red = new Button("Trash", activeColor, 90, 90, 0.1f);
     red->SetEventCallback(helloFromTrash);
 
     float kingPositionX = 0.0f, kingPositionY = 0.0f;
@@ -177,6 +194,12 @@ void Run()
     float losx = 3, losy = 2;
     bool activeMode = false;
     int movePiece   = 0;
+    int holdPiece   = -1;
+    ActiveRectangle boardGlow;
+    boardGlow.rect         = {90.f, 90.f, 90.f, 90.f};
+    boardGlow.color        = activeColor;
+    boardGlow.moveElements = moveElements;
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -191,6 +214,10 @@ void Run()
         DrawTextureEx(boardTexture, position, 0.0f, scale, WHITE);
 
         subject.renderLayers();
+        if (activeMode)
+        {
+            boardGlow.render(losx, losy);
+        }
 
         // TODO: Scale seems to be working fine but placement seems to be
         // doing the most problem. When a window resize occurs, it causes
@@ -212,7 +239,7 @@ void Run()
         }
 
         // test piece rendering
-        renderPieces[movePiece]->render(losx, losy);
+        /*renderPieces[movePiece]->render(losx, losy);*/
 
         if (IsKeyPressed(KEY_A) || IsKeyPressedRepeat(KEY_A))
         {
@@ -265,27 +292,36 @@ void Run()
         /*    subject.handleEvent(testEvent);*/
         /*}*/
 
-        // handles clicking and then switching between active mode and passive mode
+        // handles clicking and then switching between active mode and passive
+        // mode
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             if (GetMouseX() > 0 && GetMouseX() < textureWidth)
             {
+                int numX = (GetMouseX() / 90);
+                int numY = (GetMouseY() / 90);
+
                 if (!activeMode)
                 {
-                    int numX      = (GetMouseX() / 90);
-                    int numY      = (GetMouseY() / 90);
-                    int singleNum = numX + (numY * 8);
+                    // equation to convert x y position to board position.
+                    int cursorBoardPos = numX + (numY * 8);
                     TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d, SingleNum: %d",
-                             numX, numY, singleNum);
-                    movePiece = singleNum;
+                             numX, numY, cursorBoardPos);
+                    movePiece  = cursorBoardPos;
+                    holdPiece  = board[movePiece];
                     activeMode = !activeMode;
-
                 } else
                 {
-                    TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d",
-                             GetMouseX() / 90, GetMouseY() / 90);
-                    losx = static_cast<float>(GetMouseX() / 90);
-                    losy = static_cast<float>(GetMouseY() / 90);
+                    if (holdPiece != -1)
+                    {
+                        TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d", numX,
+                                 numY);
+                        // equation to convert x y position to board position.
+                        int cursorBoardPos = numX + (numY * 8);
+
+                        board[cursorBoardPos] = holdPiece;
+                        board[movePiece]      = -1;
+                    }
                     activeMode = !activeMode;
                 }
             }

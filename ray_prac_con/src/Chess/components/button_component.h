@@ -10,6 +10,7 @@ class Button : public Layer {
            float roundness = 0.0f);
 
     virtual void Render() override;
+    void Render(float x, float y);
     virtual void OnEvent(Event &event) override;
     void SetEventCallback(std::function<void(Event &)> func);
 
