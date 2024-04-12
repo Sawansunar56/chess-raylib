@@ -13,13 +13,11 @@
 void SetFlags()
 {
     SetTraceLogLevel(LOG_TRACE);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    /*SetConfigFlags(FLAG_WINDOW_RESIZABLE);*/
     // SetTargetFPS(60);
 }
 
 void helloFromTrash(Event &e) { std::cout << "Hello from trash \n"; }
-
-void helloFromshit(Event &e) { std::cout << "Hello from shit \n"; }
 
 void initBoard(std::vector<int> &board)
 {
@@ -37,6 +35,66 @@ void initBoard(std::vector<int> &board)
         j++;
         i++;
     }
+}
+
+void initBoardPieces(std::vector<Piece *> &renderPieces, Texture2D pieceAtlus,
+                     Rectangle *pieceCoords, Rectangle scaledCoord,
+                     WorldPosition moveElements)
+{
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_QUEEN],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KING],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+
+    for (int i = 0; i < 8; i++)
+    {
+        renderPieces.push_back(new Piece(pieceAtlus,
+                                         pieceCoords[WHITE_PIECE_PAWN],
+                                         scaledCoord, moveElements));
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        renderPieces.push_back(new Piece(pieceAtlus,
+                                         pieceCoords[BLACK_PIECE_PAWN],
+                                         scaledCoord, moveElements));
+    }
+
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_QUEEN],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KING],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
+                                     scaledCoord, moveElements));
 }
 
 void Run()
@@ -80,85 +138,45 @@ void Run()
 
     Button *red = new Button("Trash", RED, 100, 100, 0.3f);
     red->SetEventCallback(helloFromTrash);
-    Button *yellow = new Button("shit", YELLOW, 400, 100, 0.3f);
-    yellow->SetEventCallback(helloFromshit);
 
     float kingPositionX = 0.0f, kingPositionY = 0.0f;
     float pawnPositionX = -90.0f, pawnPositionY = -15.0f;
     float width = 100, height = 100, distance = 100;
-    float scale = .24f;
+    float makeScale = .24f;
 
-    Rectangle scaledCoord  = {kingPositionX, kingPositionY, PIECE_WIDTH * scale,
-                              PIECE_HEIGHT * scale};
-    Rectangle scaledCoord2 = {pawnPositionX, pawnPositionY, PIECE_WIDTH * scale,
-                              PIECE_HEIGHT * scale};
+    Rectangle scaledCoord = {kingPositionX, kingPositionY,
+                             PIECE_WIDTH * makeScale, PIECE_HEIGHT * makeScale};
 
     std::vector<Piece *> renderPieces;
     std::vector<PlayPiece *> playingPieces;
 
-    /*for (int i = 0; i < P_NUM; ++i)*/
-    /*{*/
-    /*    renderPieces.push_back(*/
-    /*        new Piece(pieceAtlus, pieceCoords[i], scaledCoord));*/
-    /*}*/
+    float x = -90.f, y = -5.f, scaleX = 10, scaleY = 10;
+    // Render Region
+    float scale      = (float)GetScreenHeight() / boardTexture.height;
+    float pieceScale = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
+    float pieceGap   = 435.0f;
 
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KNIGHT], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_BISHOP], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_QUEEN], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KING], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_BISHOP], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KNIGHT], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK], scaledCoord));
+    int textureHeight = boardTexture.width * scale,
+        textureWidth  = boardTexture.height * scale;
 
-    for (int i = 0; i < 8; i++)
-    {
-        renderPieces.push_back(
-            new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_PAWN], scaledCoord));
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        renderPieces.push_back(
-            new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_PAWN], scaledCoord));
-    }
+    // to divide the world into equal sections
+    WorldPosition moveElements;
+    moveElements.positionX  = x;
+    moveElements.positionY  = y;
+    moveElements.pieceGap   = pieceGap;
+    moveElements.pieceScale = pieceScale;
 
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KNIGHT], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_BISHOP], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_QUEEN], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KING], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_BISHOP], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KNIGHT], scaledCoord));
-    renderPieces.push_back(
-        new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK], scaledCoord));
-
-    for (int i = 0; i < BOARD_PIECE_NUM; i++)
-    {
-        playingPieces.push_back(new PlayPiece(i));
-    }
+    // initialize main board pieces to positions like the enum.
+    initBoardPieces(renderPieces, pieceAtlus, pieceCoords, scaledCoord,
+                    moveElements);
 
     // adding element into the screen
     subject.addLayer(red);
-    subject.addLayer(yellow);
 
-    float x = -85, y = -5, scaleX = 10, scaleY = 10;
-
-    float pieceGap = 440.0f;
+    // test render variables
+    float losx = 3, losy = 2;
+    bool activeMode = false;
+    int movePiece   = 0;
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -169,10 +187,7 @@ void Run()
         fps             = std::to_string(GetFPS());
         DrawText(fps.c_str(), SCREEN_WIDTH - 100, 10, 20, LIGHTGRAY);
 
-        // Render Region
-        float scale      = (float)GetScreenHeight() / boardTexture.height;
-        float pieceScale = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
-
+        // texture board scaled render
         DrawTextureEx(boardTexture, position, 0.0f, scale, WHITE);
 
         subject.renderLayers();
@@ -181,21 +196,23 @@ void Run()
         // doing the most problem. When a window resize occurs, it causes
         // the pieces to move either a little bit left or right.
 
+        // board rendering
         for (int i = 0; i < board.size(); i += 8)
         {
             for (int j = i; j < i + 8; ++j)
             {
-                int yStep = j / 8;
-                int xStep = j % 8;
+                int yBoardPos = j / 8;
+                int xBoardPos = j % 8;
+
                 if (board[j] != -1)
                 {
-                    renderPieces[board[j]]->render(
-                        x + (pieceGap * xStep * pieceScale),
-                        y + (pieceGap * yStep * pieceScale),
-                        PIECE_WIDTH * pieceScale, PIECE_HEIGHT * pieceScale);
+                    renderPieces[board[j]]->render(xBoardPos, yBoardPos);
                 }
             }
         }
+
+        // test piece rendering
+        renderPieces[movePiece]->render(losx, losy);
 
         if (IsKeyPressed(KEY_A) || IsKeyPressedRepeat(KEY_A))
         {
@@ -215,7 +232,7 @@ void Run()
         }
         if (IsKeyPressed(KEY_LEFT) || IsKeyPressedRepeat(KEY_LEFT))
         {
-            x -= 1;
+            losx -= 1;
             TraceLog(LOG_INFO,
                      "width: %f, height: %f , scale: %f, pieceGap: %f, "
                      "pieceScale",
@@ -223,7 +240,7 @@ void Run()
         }
         if (IsKeyPressed(KEY_RIGHT) || IsKeyPressedRepeat(KEY_RIGHT))
         {
-            x += 1;
+            losx += 1;
             TraceLog(LOG_INFO,
                      "width: %f, height: %f , scale: %f, pieceGap: %f, "
                      "pieceScale",
@@ -231,21 +248,47 @@ void Run()
         }
         if (IsKeyPressed(KEY_UP) || IsKeyPressedRepeat(KEY_UP))
         {
-            y -= 1;
+            losy -= 1;
             TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);
         }
         if (IsKeyPressed(KEY_DOWN) || IsKeyPressedRepeat(KEY_DOWN))
         {
-            y += 1;
+            losy += 1;
             TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);
         }
 
         // Event Handling
+        /*if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))*/
+        /*{*/
+        /*    Event testEvent;*/
+        /*    testEvent.type = EventType::MouseClickEvent;*/
+        /*    subject.handleEvent(testEvent);*/
+        /*}*/
+
+        // handles clicking and then switching between active mode and passive mode
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            Event testEvent;
-            testEvent.type = EventType::MouseClickEvent;
-            subject.handleEvent(testEvent);
+            if (GetMouseX() > 0 && GetMouseX() < textureWidth)
+            {
+                if (!activeMode)
+                {
+                    int numX      = (GetMouseX() / 90);
+                    int numY      = (GetMouseY() / 90);
+                    int singleNum = numX + (numY * 8);
+                    TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d, SingleNum: %d",
+                             numX, numY, singleNum);
+                    movePiece = singleNum;
+                    activeMode = !activeMode;
+
+                } else
+                {
+                    TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d",
+                             GetMouseX() / 90, GetMouseY() / 90);
+                    losx = static_cast<float>(GetMouseX() / 90);
+                    losy = static_cast<float>(GetMouseY() / 90);
+                    activeMode = !activeMode;
+                }
+            }
         }
         EndDrawing();
     }

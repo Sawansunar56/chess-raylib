@@ -58,18 +58,24 @@ enum boardPiece
     BLACK_PAWN_EIGHT,
     BOARD_PIECE_NUM
 };
-
+struct WorldPosition
+{
+    float positionX;
+    float positionY;
+    float pieceGap;
+    float pieceScale;
+};
 class Piece
 {
   public:
-    Piece(Texture2D &atlus, Rectangle src, Rectangle dest);
-    void init(Texture2D &atlus, Rectangle src, Rectangle dest);
+    Piece(Texture2D &atlus, Rectangle src, Rectangle dest,
+          WorldPosition moveElements);
     void render();
     void render(int x, int y);
-    void render(int x, int y, int width, int height);
 
   private:
     Rectangle m_PieceDestSize;
     Rectangle m_PieceSrcSize;
     Texture2D &m_PieceAtlus;
+    WorldPosition m_MoveElements;
 };
