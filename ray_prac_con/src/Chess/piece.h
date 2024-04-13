@@ -62,7 +62,7 @@ struct WorldPosition
 {
     float positionX;
     float positionY;
-    float pieceGap;
+    float pieceJump;
     float pieceScale;
 };
 class Piece

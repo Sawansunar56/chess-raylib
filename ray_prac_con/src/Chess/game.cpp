@@ -104,10 +104,8 @@ struct ActiveRectangle
     WorldPosition moveElements;
     void render(int x, int y)
     {
-        rect.x = moveElements.positionX +
-                 (moveElements.pieceGap * x * moveElements.pieceScale);
-        rect.y = moveElements.positionY +
-                 (moveElements.pieceGap * y * moveElements.pieceScale);
+        rect.x = moveElements.positionX + (x * 90);
+        rect.y = moveElements.positionY + (y * 90);
         DrawRectangleRounded(rect, 0.1f, 10, color);
     }
 };
@@ -169,19 +167,19 @@ void Run()
 
     float x = -90.f, y = -5.f, scaleX = 10, scaleY = 10;
     // Render Region
-    float scale      = (float)GetScreenHeight() / boardTexture.height;
-    float pieceScale = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
-    float pieceGap   = 435.0f;
+    float scale        = (float)GetScreenHeight() / boardTexture.height;
+    float pieceScale   = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
+    float pieceJump = 440.0f;
 
-    int textureHeight = boardTexture.width * scale,
-        textureWidth  = boardTexture.height * scale;
+    float textureHeight = boardTexture.width * scale,
+          textureWidth  = boardTexture.height * scale;
 
     // to divide the world into equal sections
     WorldPosition moveElements;
-    moveElements.positionX  = x;
-    moveElements.positionY  = y;
-    moveElements.pieceGap   = pieceGap;
-    moveElements.pieceScale = pieceScale;
+    moveElements.positionX    = 0.0f;
+    moveElements.positionY    = 0.0f;
+    moveElements.pieceJump = pieceJump;
+    moveElements.pieceScale   = pieceScale;
 
     // initialize main board pieces to positions like the enum.
     initBoardPieces(renderPieces, pieceAtlus, pieceCoords, scaledCoord,
@@ -219,10 +217,6 @@ void Run()
             boardGlow.render(losx, losy);
         }
 
-        // TODO: Scale seems to be working fine but placement seems to be
-        // doing the most problem. When a window resize occurs, it causes
-        // the pieces to move either a little bit left or right.
-
         // board rendering
         for (int i = 0; i < board.size(); i += 8)
         {
@@ -241,48 +235,48 @@ void Run()
         // test piece rendering
         /*renderPieces[movePiece]->render(losx, losy);*/
 
-        if (IsKeyPressed(KEY_A) || IsKeyPressedRepeat(KEY_A))
-        {
-            pieceGap -= 1;
-            TraceLog(LOG_INFO,
-                     "width: %f, height: %f , scale: %f, pieceGap: %f, "
-                     "pieceScale",
-                     x, y, scale, pieceGap, pieceScale);
-        }
-        if (IsKeyPressed(KEY_D) || IsKeyPressedRepeat(KEY_D))
-        {
-            pieceGap += 1;
-            TraceLog(LOG_INFO,
-                     "width: %f, height: %f , scale: %f, pieceGap:%f, "
-                     "pieceScale",
-                     x, y, scale, pieceGap, pieceScale);
-        }
-        if (IsKeyPressed(KEY_LEFT) || IsKeyPressedRepeat(KEY_LEFT))
-        {
-            losx -= 1;
-            TraceLog(LOG_INFO,
-                     "width: %f, height: %f , scale: %f, pieceGap: %f, "
-                     "pieceScale",
-                     x, y, scale, pieceGap, pieceScale);
-        }
-        if (IsKeyPressed(KEY_RIGHT) || IsKeyPressedRepeat(KEY_RIGHT))
-        {
-            losx += 1;
-            TraceLog(LOG_INFO,
-                     "width: %f, height: %f , scale: %f, pieceGap: %f, "
-                     "pieceScale",
-                     x, y, scale, pieceGap, pieceScale);
-        }
-        if (IsKeyPressed(KEY_UP) || IsKeyPressedRepeat(KEY_UP))
-        {
-            losy -= 1;
-            TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);
-        }
-        if (IsKeyPressed(KEY_DOWN) || IsKeyPressedRepeat(KEY_DOWN))
-        {
-            losy += 1;
-            TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);
-        }
+        /*if (IsKeyPressed(KEY_A) || IsKeyPressedRepeat(KEY_A))*/
+        /*{*/
+        /*    pieceGap -= 1;*/
+        /*    TraceLog(LOG_INFO,*/
+        /*             "width: %f, height: %f , scale: %f, pieceGap: %f, "*/
+        /*             "pieceScale",*/
+        /*             x, y, scale, pieceGap, pieceScale);*/
+        /*}*/
+        /*if (IsKeyPressed(KEY_D) || IsKeyPressedRepeat(KEY_D))*/
+        /*{*/
+        /*    pieceGap += 1;*/
+        /*    TraceLog(LOG_INFO,*/
+        /*             "width: %f, height: %f , scale: %f, pieceGap:%f, "*/
+        /*             "pieceScale",*/
+        /*             x, y, scale, pieceGap, pieceScale);*/
+        /*}*/
+        /*if (IsKeyPressed(KEY_LEFT) || IsKeyPressedRepeat(KEY_LEFT))*/
+        /*{*/
+        /*    losx -= 1;*/
+        /*    TraceLog(LOG_INFO,*/
+        /*             "width: %f, height: %f , scale: %f, pieceGap: %f, "*/
+        /*             "pieceScale",*/
+        /*             x, y, scale, pieceGap, pieceScale);*/
+        /*}*/
+        /*if (IsKeyPressed(KEY_RIGHT) || IsKeyPressedRepeat(KEY_RIGHT))*/
+        /*{*/
+        /*    losx += 1;*/
+        /*    TraceLog(LOG_INFO,*/
+        /*             "width: %f, height: %f , scale: %f, pieceGap: %f, "*/
+        /*             "pieceScale",*/
+        /*             x, y, scale, pieceGap, pieceScale);*/
+        /*}*/
+        /*if (IsKeyPressed(KEY_UP) || IsKeyPressedRepeat(KEY_UP))*/
+        /*{*/
+        /*    losy -= 1;*/
+        /*    TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);*/
+        /*}*/
+        /*if (IsKeyPressed(KEY_DOWN) || IsKeyPressedRepeat(KEY_DOWN))*/
+        /*{*/
+        /*    losy += 1;*/
+        /*    TraceLog(LOG_INFO, "width: %f, height: %f ", x, y);*/
+        /*}*/
 
         // Event Handling
         /*if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))*/
@@ -309,6 +303,8 @@ void Run()
                              numX, numY, cursorBoardPos);
                     movePiece  = cursorBoardPos;
                     holdPiece  = board[movePiece];
+                    losx       = numX;
+                    losy       = numY;
                     activeMode = !activeMode;
                 } else
                 {
@@ -317,8 +313,7 @@ void Run()
                         TraceLog(LOG_INFO, "MouseX: %d, MouseY: %d", numX,
                                  numY);
                         // equation to convert x y position to board position.
-                        int cursorBoardPos = numX + (numY * 8);
-
+                        int cursorBoardPos    = numX + (numY * 8);
                         board[cursorBoardPos] = holdPiece;
                         board[movePiece]      = -1;
                     }
