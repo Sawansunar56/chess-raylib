@@ -1,6 +1,10 @@
 bin/
 bin-int/
 
+vendor
+
+imgui.ini
+
 # visual studio files
 .vs
 *.sln

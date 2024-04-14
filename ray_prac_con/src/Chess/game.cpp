@@ -1,114 +1,15 @@
 #include "game.h"
 #include "Events/Events.h"
 #include "layer.h"
-#include "piece.h"
-#include "raylib.h"
+#include "imgui.h"
+#include "rlImGui.h"
 #include "play_piece.h"
 #include <iostream>
 #include <string>
-#include <vector>
 
 #include "components/button_component.h"
 
-void SetFlags()
-{
-    SetTraceLogLevel(LOG_TRACE);
-    /*SetConfigFlags(FLAG_WINDOW_RESIZABLE);*/
-    // SetTargetFPS(60);
-}
-
 void helloFromTrash(Event &e) { std::cout << "Hello from trash \n"; }
-
-void initBoard(std::vector<int> &board)
-{
-    int i = 0, j = WHITE_ROOK_LEFT;
-    while (i < 16)
-    {
-        board[i] = j;
-        i++;
-        j++;
-    }
-    i += 32;
-    while (i < 64)
-    {
-        board[i] = j;
-        j++;
-        i++;
-    }
-}
-
-void initBoardPieces(std::vector<Piece *> &renderPieces, Texture2D pieceAtlus,
-                     Rectangle *pieceCoords, Rectangle scaledCoord,
-                     WorldPosition moveElements)
-{
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[WHITE_PIECE_KNIGHT],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[WHITE_PIECE_BISHOP],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_QUEEN],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KING],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[WHITE_PIECE_BISHOP],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[WHITE_PIECE_KNIGHT],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
-                                     scaledCoord, moveElements));
-
-    for (int i = 0; i < 8; i++)
-    {
-        renderPieces.push_back(new Piece(pieceAtlus,
-                                         pieceCoords[WHITE_PIECE_PAWN],
-                                         scaledCoord, moveElements));
-    }
-    for (int i = 0; i < 8; i++)
-    {
-        renderPieces.push_back(new Piece(pieceAtlus,
-                                         pieceCoords[BLACK_PIECE_PAWN],
-                                         scaledCoord, moveElements));
-    }
-
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[BLACK_PIECE_KNIGHT],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[BLACK_PIECE_BISHOP],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_QUEEN],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KING],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[BLACK_PIECE_BISHOP],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus,
-                                     pieceCoords[BLACK_PIECE_KNIGHT],
-                                     scaledCoord, moveElements));
-    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
-                                     scaledCoord, moveElements));
-}
-
-struct ActiveRectangle
-{
-    Rectangle rect;
-    Color color;
-    WorldPosition moveElements;
-    void render(int x, int y)
-    {
-        rect.x = moveElements.positionX + (x * 90);
-        rect.y = moveElements.positionY + (y * 90);
-        DrawRectangleRounded(rect, 0.1f, 10, color);
-    }
-};
 
 void Run()
 {
@@ -123,6 +24,7 @@ void Run()
     SetFlags();
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Chess");
     initBoard(board);
+    rlImGuiSetup(true);
 
     LayerManager subject;
     Rectangle pieceCoords[P_NUM];
@@ -167,19 +69,19 @@ void Run()
 
     float x = -90.f, y = -5.f, scaleX = 10, scaleY = 10;
     // Render Region
-    float scale        = (float)GetScreenHeight() / boardTexture.height;
-    float pieceScale   = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
-    float pieceJump = 440.0f;
+    float scale      = (float)GetScreenHeight() / boardTexture.height;
+    float pieceScale = (float)GetScreenHeight() / (PIECE_HEIGHT * 10);
+    float pieceJump  = 440.0f;
 
     float textureHeight = boardTexture.width * scale,
           textureWidth  = boardTexture.height * scale;
 
     // to divide the world into equal sections
     WorldPosition moveElements;
-    moveElements.positionX    = 0.0f;
-    moveElements.positionY    = 0.0f;
-    moveElements.pieceJump = pieceJump;
-    moveElements.pieceScale   = pieceScale;
+    moveElements.positionX  = 0.0f;
+    moveElements.positionY  = 0.0f;
+    moveElements.pieceJump  = pieceJump;
+    moveElements.pieceScale = pieceScale;
 
     // initialize main board pieces to positions like the enum.
     initBoardPieces(renderPieces, pieceAtlus, pieceCoords, scaledCoord,
@@ -198,12 +100,15 @@ void Run()
     boardGlow.color        = activeColor;
     boardGlow.moveElements = moveElements;
 
+    float test[4]{0};
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
-
-        // Setup Drawing Region
         ClearBackground(RAYWHITE);
+
+        rlImGuiBegin();
+        //  Setup Drawing Region
         std::string fps = "";
         fps             = std::to_string(GetFPS());
         DrawText(fps.c_str(), SCREEN_WIDTH - 100, 10, 20, LIGHTGRAY);
@@ -227,10 +132,14 @@ void Run()
 
                 if (board[j] != -1)
                 {
-                    renderPieces[board[j]]->render(xBoardPos, yBoardPos);
+                    renderPieces[board[j]]->render(xBoardPos - 1, yBoardPos);
                 }
             }
         }
+
+        /*ImGui::Begin("Settings");*/
+        ImGui::ColorEdit4("Power", test);
+        /*ImGui::End();*/
 
         // test piece rendering
         /*renderPieces[movePiece]->render(losx, losy);*/
@@ -321,8 +230,95 @@ void Run()
                 }
             }
         }
+        rlImGuiEnd();
         EndDrawing();
     }
+    rlImGuiShutdown();
 
     CloseWindow();
+}
+
+void initBoardPieces(std::vector<Piece *> &renderPieces, Texture2D pieceAtlus,
+                     Rectangle *pieceCoords, Rectangle scaledCoord,
+                     WorldPosition moveElements)
+{
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_QUEEN],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_KING],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[WHITE_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[WHITE_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+
+    for (int i = 0; i < 8; i++)
+    {
+        renderPieces.push_back(new Piece(pieceAtlus,
+                                         pieceCoords[WHITE_PIECE_PAWN],
+                                         scaledCoord, moveElements));
+    }
+    for (int i = 0; i < 8; i++)
+    {
+        renderPieces.push_back(new Piece(pieceAtlus,
+                                         pieceCoords[BLACK_PIECE_PAWN],
+                                         scaledCoord, moveElements));
+    }
+
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_QUEEN],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_KING],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_BISHOP],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus,
+                                     pieceCoords[BLACK_PIECE_KNIGHT],
+                                     scaledCoord, moveElements));
+    renderPieces.push_back(new Piece(pieceAtlus, pieceCoords[BLACK_PIECE_ROOK],
+                                     scaledCoord, moveElements));
+}
+
+void initBoard(std::vector<int> &board)
+{
+    int i = 0, j = WHITE_ROOK_LEFT;
+    while (i < 16)
+    {
+        board[i] = j;
+        i++;
+        j++;
+    }
+    i += 32;
+    while (i < 64)
+    {
+        board[i] = j;
+        j++;
+        i++;
+    }
+}
+
+void SetFlags()
+{
+    SetTraceLogLevel(LOG_TRACE);
+    SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+    SetTargetFPS(60);
 }
